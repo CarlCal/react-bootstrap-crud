@@ -19,9 +19,9 @@ module.exports = {
           plugins: ['react-html-attrs', 'transform-decorators-legacy', 'transform-class-properties'],
         }
       },
-      {
-        test: /\.css$/,
-        loader: "style!css"
+      { 
+        test: /\.sass$/,
+        loader: "style!css!sass!"
       }
     ]
   },
