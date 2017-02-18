@@ -8,7 +8,20 @@ import Recipes from "./Recipes"
 export default class Box extends React.Component {
 	
 	constructor() {
-		var storage = JSON.parse(localStorage.getItem("carlcRecipes"))
+
+    const initialData = [
+      {title: "A Chicken Thing", ingredients: ["chicken", "cheese", "curry", "bread"]},
+      {title: "Toast", ingredients: ["bread", "bacon", "egg"]}
+    ]
+
+    var storage = window.localStorage.getItem('carlcRecipes') 
+
+    if (typeof storage === 'undefined' || storage === null) {
+      storage = initialData
+      window.localStorage.setItem('carlcRecipes', JSON.stringify(storage))
+    } else {
+      storage = JSON.parse(window.localStorage.getItem("carlcRecipes"))
+    }
 
     super()
     this.state = {parsedLocalStorage: storage, 
@@ -42,9 +55,7 @@ export default class Box extends React.Component {
   }
 
   editInput(target, newRecipe) {
-  	
   	var storage = JSON.parse(localStorage.getItem("carlcRecipes"))
-  	console.log(target)
 
   	storage[target].title = newRecipe.title
   	storage[target].ingredients = newRecipe.ingredients
@@ -56,8 +67,10 @@ export default class Box extends React.Component {
 
   deleteRecipe(target) {
   	var storage = JSON.parse(localStorage.getItem("carlcRecipes"))
+
   	storage.splice(target, 1)
   	window.localStorage.setItem("carlcRecipes", JSON.stringify(storage))
+    
   	this.setState({ parsedLocalStorage: storage })
   }
 
@@ -73,7 +86,7 @@ export default class Box extends React.Component {
 		return (
 			<div>
 				<Recipes recipes={this.state.parsedLocalStorage} removeRecipe={this.deleteRecipe.bind(this)} recipeEdit={this.editInput.bind(this)} />
-		  	<button class="btn btn-lg btn-info" onClick={this.open.bind(this)}>Add Recipe</button>
+		  	<button className="btn btn-lg btn-info" onClick={this.open.bind(this)}>Add Recipe</button>
 			  <Modal show={this.state.showAddModal} onHide={this.close.bind(this)}>
 			  	<Modal.Header closeButton>
 			    	<center><Modal.Title>Add a new recipe</Modal.Title></center>
@@ -102,7 +115,7 @@ export default class Box extends React.Component {
 			     	</Modal.Body>
 
 		        <Modal.Footer>
-		          <button type="reset" class="btn btn-sm btn-primary" onClick={this.handleNewRecipe.bind(this)} >Add Recipe</button>
+		          <button type="reset" className="btn btn-sm btn-primary" onClick={this.handleNewRecipe.bind(this)} >Add Recipe</button>
 		        </Modal.Footer>
 	        </form>
 	      </Modal>

@@ -14,9 +14,14 @@ export default class Recipes extends React.Component {
 									currentIndex: -1}
 	}
 	
-	handleRemoval(event) { this.props.removeRecipe(this.state.currentIndex) 	}
+	handleRemoval(event) {
+		var id = event.target.id
+		var index = parseInt(id.substr(id.indexOf('-') + 1), 10)
 
-	handleInput(event) {
+		this.props.removeRecipe(index) 	
+	}
+
+	handleNewInput(event) {
   	var name = event.target.name
   	var value = event.target.value
 
@@ -27,7 +32,7 @@ export default class Recipes extends React.Component {
   	}
   }
 
-  handleEditInput(event) {
+  handleEditedRecipe(event) {
   	var recipe = {title: this.state.currentTitle, ingredients: this.state.currentIngredients.split(',')}
   	this.props.recipeEdit(this.state.currentIndex, recipe)
 
@@ -40,6 +45,8 @@ export default class Recipes extends React.Component {
 		var index = parseInt(event.target.id.substr(event.target.id.indexOf("-") + 1), 10)
 		var storage = JSON.parse(localStorage.getItem("carlcRecipes"))
 		var target = storage[index]
+		
+		console.log(storage)
 
   	this.setState({ showEditModal: true,
   									currentTitle: target.title,
@@ -53,27 +60,28 @@ export default class Recipes extends React.Component {
 		return (
 			<div>
 				<Accordion>
-					{
-						this.props.recipes.map((recipe, i) => {
-							return	<Panel key={i} eventKey={i} class="panel" bsStyle="success" header={recipe.title} >
-												<div id="title-container" >
-													<p>{"Ingredients"}</p>
-												</div>
-												<div id="content-container">
-													<ListGroup>			    							
-														{	
-															recipe.ingredients.map((ingredient, j) => {
-																return <ListGroupItem key={j}>{ingredient}</ListGroupItem>				 
-															})
-														}	
-													</ListGroup>	
-												</div>
-												<button id={"panelDelete-"+i} onClick={this.handleRemoval.bind(this)} class="btn btn-md btn-danger">Delete</button>
-												<button id={"panelEdit-"+i} onClick={this.open.bind(this)} class="btn btn-md btn-primary">Edit</button>
-											</Panel>
+				{
+					this.props.recipes.map((recipe, i) => {
+						return	<Panel key={i} eventKey={i} className="panel" bsStyle="success" header={recipe.title} >
+											<div id="title-container" >
+												<p>{"Ingredients"}</p>
+											</div>
+											<div id="content-container">
+												<ListGroup>			    							
+													{	
+														recipe.ingredients.map((ingredient, j) => {
+															return <ListGroupItem key={j}>{ingredient}</ListGroupItem>				 
+														})
+													}	
+												</ListGroup>	
+											</div>
+											<button id={"panelDelete-"+i} onClick={this.handleRemoval.bind(this)} className="btn btn-md btn-danger">Delete</button>
+											<button id={"panelEdit-"+i} onClick={this.open.bind(this)} className="btn btn-md btn-primary">Edit</button>
+										</Panel>
 						})
 					}
 				</Accordion>
+
 				<Modal show={this.state.showEditModal} onHide={this.close.bind(this)}>
 			  	<Modal.Header closeButton>
 			    	<center><Modal.Title>Edit a recipe</Modal.Title></center>
@@ -84,7 +92,7 @@ export default class Recipes extends React.Component {
 						<FormGroup>
 					  	<ControlLabel>Recipe:</ControlLabel>
 							<FormControl
-								onChange={this.handleInput.bind(this)}
+								onChange={this.handleNewInput.bind(this)}
 								value={this.state.currentTitle}
 				       	name= "title"
 				        type="text"
@@ -94,7 +102,7 @@ export default class Recipes extends React.Component {
 				      <FormGroup>
 				      	<ControlLabel>Ingredients:</ControlLabel>
 				        <FormControl
-				        	onChange={this.handleInput.bind(this)}
+				        	onChange={this.handleNewInput.bind(this)}
 				        	value={this.state.currentIngredients}
 				        	name= "ingredients"
 				          componentClass="textarea"
@@ -104,7 +112,7 @@ export default class Recipes extends React.Component {
 			     	</Modal.Body>
 
 		        <Modal.Footer>
-		          <button type="button" class="btn btn-sm btn-primary" onClick={this.handleEditInput.bind(this)} >Edit Recipe</button>
+		          <button type="button" className="btn btn-sm btn-primary" onClick={this.handleEditedRecipe.bind(this)} >Edit Recipe</button>
 		        </Modal.Footer>
 	        </form>
 	      </Modal>

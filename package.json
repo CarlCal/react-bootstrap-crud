@@ -27,6 +27,7 @@
     "style-loader": "^0.13.1"
   },
   "scripts": {
+    "start": "node ./node_modules/webpack/bin/webpack.js",
     "dev": "webpack-dev-server --content-base src --inline --hot",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
